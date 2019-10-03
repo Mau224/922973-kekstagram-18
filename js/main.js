@@ -22,7 +22,7 @@ var photoTemplate = document.querySelector('#picture')
 var getComments = function () {
   var photoComments = [];
   for (var i = 0; i < PHOTOS_COUNT; i++) {
-    photoComments.push = ({
+    photoComments.push({
       url: 'img/avatar-' + ((Math.floor(Math.random() * (AVATAR_MAX - AVATAR_MIN + 1)) + AVATAR_MIN)) + '.svg',
       message: COMMENTS[Math.floor(Math.random() * COMMENTS.length)],
       name: NAMES[Math.floor(Math.random() * NAMES.length)]
@@ -36,7 +36,7 @@ var photoCommentsArr = getComments();
 var getDiscriptionsPhotos = function () {
   var photoDescriptions = [];
   for (var i = 0; i < PHOTOS_COUNT; i++) {
-    photoDescriptions.push = ({
+    photoDescriptions.push({
       url: 'photos/' + (i + 1) + '.jpg',
       description: DESCRIPTIONS[Math.floor(Math.random() * DESCRIPTIONS.length)],
       likes: Math.floor(Math.random() * (LIKES_MAX - LIKES_MIN + 1)) + LIKES_MIN,
