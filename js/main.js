@@ -19,8 +19,10 @@ var photoTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
+var photoDescriptions = [];
+var photoComments = [];
+
 var getComments = function () {
-  var photoComments = [];
   for (var i = 0; i < PHOTOS_COUNT; i++) {
     photoComments.push({
       url: 'img/avatar-' + ((Math.floor(Math.random() * (AVATAR_MAX - AVATAR_MIN + 1)) + AVATAR_MIN)) + '.svg',
@@ -28,13 +30,12 @@ var getComments = function () {
       name: NAMES[Math.floor(Math.random() * NAMES.length)]
     });
   }
-  return photoComments;
+  photoComments();
 };
 
 var photoCommentsArr = getComments();
 
 var getDiscriptionsPhotos = function () {
-  var photoDescriptions = [];
   for (var i = 0; i < PHOTOS_COUNT; i++) {
     photoDescriptions.push({
       url: 'photos/' + (i + 1) + '.jpg',
@@ -43,7 +44,7 @@ var getDiscriptionsPhotos = function () {
       comments: photoCommentsArr.slice(Math.floor(Math.random() * photoCommentsArr.length))
     });
   }
-  return photoDescriptions;
+  getDiscriptionsPhotos();
 };
 
 var descriptionsArr = getDiscriptionsPhotos();
