@@ -65,3 +65,31 @@ for (var i = 0; i < descriptionsArr.length; i++) {
 }
 
 pictures.appendChild(fragment);
+
+var imgUploadForm = document.querySelector('.img-upload__form');
+var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
+var uploadButton = imgUploadForm.querySelector('#upload-file');
+var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
+var ESC_KEY = 27;
+var hashtagInput = imgUploadForm.querySelector('.text__hashtags');
+
+var onEscButtonCloseEdit = function (evt) {
+  if (evt.keyCode === ESC_KEY && evt.target !== hashtagInput) {
+    closeEdit();
+  }
+};
+
+var closeEdit = function () {
+  imgUploadForm.reset();
+  imgEditOverlay.classList.add('hidden');
+  closeEditButton.removeEventListener('click', closeEdit);
+  document.removeEventListener('keydown', onEscButtonCloseEdit);
+};
+
+var openEdit = function () {
+  imgEditOverlay.classList.remove('hidden');
+  closeEditButton.addEventListener('click', closeEdit);
+  document.addEventListener('keydown', onEscButtonCloseEdit);
+};
+
+uploadButton.addEventListener('change', openEdit);
