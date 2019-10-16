@@ -14,6 +14,13 @@ var COMMENTS = ['Всё отлично!', 'В целом всё неплохо. 
 ];
 var NAMES = ['Глаша', 'Даша', 'Саша', 'Маша', 'Наташа'];
 
+var Resize = {
+  MIN: 25,
+  MAX: 100
+};
+
+var ESC_KEY = 27;
+
 var pictures = document.querySelector('.pictures');
 var photoTemplate = document.querySelector('#picture')
   .content
@@ -70,8 +77,8 @@ var imgUploadForm = document.querySelector('.img-upload__form');
 var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
 var uploadButton = imgUploadForm.querySelector('#upload-file');
 var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
-var ESC_KEY = 27;
 var hashtagInput = imgUploadForm.querySelector('.text__hashtags');
+
 
 var onEscButtonCloseEdit = function (evt) {
   if (evt.keyCode === ESC_KEY && evt.target !== hashtagInput && !evt.target.classList.contains('.text__description')) {
@@ -94,67 +101,101 @@ var openEdit = function () {
 
 uploadButton.addEventListener('change', openEdit);
 
+var resizeImage = function (value) {
+  imageUploadPreview.style.transform = 'scale(' + value / 100 + ')'; // измненяет размер исходя из значения в value через метод transform
+};
+
+var changeValue = function (isGrow) {
+  var currentValue = parseInt(scaleControlValue.value, 10);
+  if (!isGrow && currentValue > Resize.MIN) {
+    currentValue -= Resize.MIN;
+  } else if (isGrow && currentValue < Resize.MAX) {
+    currentValue += Resize.MIN; // если isGrow не ровно или value больше шагов ,то отнять шаг от value ,если isGrow или value меньше 100 то прибавить шаг к value
+  }
+  resizeImage(currentValue); // изменить размер в соотвествии с value
+  currentValue = currentValue; // прировнять значения
+  scaleControlValue.value = currentValue + '%'; // изменяет значение атрибута у пременной указанного в value
+};
+
 // Увеличение масштаба изображения
-var STEP = 25;
-var imageUploadScale = document.querySelector('.img-upload__scale');// ищет по документу
+var imageForm = document.querySelector('#upload-select-image');
+var imageUploadScale = imageForm.querySelector('.img-upload__scale');// ищет по документу
 var scaleControlValue = imageUploadScale.querySelector('.scale__control--value');// ищет по переменной
 var buttonSmall = imageUploadScale.querySelector('.scale__control--smaller');
 var buttonlBig = imageUploadScale.querySelector('.scale__control--bigger');
-var imageUploadPreview = document.querySelector('.img-upload__preview');
+var imageUploadPreview = imageForm.querySelector('.img-upload__preview');
 
-scaleControlValue.setAttribute('value', '100%');// присваивает атрибуты
 
-var currentValue = parseInt(scaleControlValue.getAttribute('value'), 10);// принимает строку в качестве аргумента и возвращает целое число в соответствии с указанным основанием системы счисления.
-
-buttonSmall.addEventListener('click', function (evt) { // отменяет событие и присваивает ему false
-  evt.preventDefault();
-  changeValue(currentValue, false);
+buttonSmall.addEventListener('click', function () { // отменяет событие и присваивает ему false
+  changeValue(false);
 });
 
-buttonlBig.addEventListener('click', function (evt) { // отменяет событие и присваивает ему true
-  evt.preventDefault();
-  changeValue(currentValue, true);
+buttonlBig.addEventListener('click', function () { // отменяет событие и присваивает ему true
+  changeValue(true);
 });
 
-function changeValue(value, isGrow) {
-  if (!isGrow && value > STEP) {
-    value -= STEP;
-  } else if (isGrow && value < 100) {
-    value += STEP;// если isGrow не ровно или value больше шагов ,то отнять шаг от value ,если isGrow или value меньше 100 то прибавить шаг к value
-  }
-  resizeImage(value);// изменить размер в соотвествии с value
-  currentValue = value;// прировнять значения
-  scaleControlValue.setAttribute('value', value + '%');// изменяет значение атрибута у пременной указанного в value
-}
 
-function resizeImage(value) {
-  imageUploadPreview.style.transform = 'scale(' + value / 100 + ')';// измненяет размер исходя из значения в value через метод transform
-}
 // Наложение эффекта на изображение
 var FILTERS = {
-  'effect-chrome': 'effects__preview--chrome', // Присваение классу эффекта с модификатором
-  'effect-sepia': 'effects__preview--sepia',
-  'effect-marvin': 'effects__preview--marvin',
-  'effect-phobos': 'effects__preview--phobos',
-  'effect-heat': 'effects__preview--heat'
+  'chrome': function () {
+    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
+    return 'grayscale(' + (effectValue / 100) + ')';
+  }, // Присваение классу эффекта с модификатором
+  'sepia': function () {
+    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
+    return 'sepia(' + (effectValue / 100) + ')';
+  },
+  'marvin': function () {
+    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
+    return 'marvin(' + (effectValue / 100) + ')';
+  },
+  'phobos': function () {
+    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
+    return 'phobos(' + Math.floor(effectValue / 33) + 'px' + ')';
+  },
+  'heat': function () {
+    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
+    return 'heat(' + (effectValue / 300) * 1 + ')';
+  },
+  'none': 'none'
 };
-var imageUploadEffects = document.querySelector('.img-upload__effects');
-var effectsItems = imageUploadEffects.querySelectorAll('.effects__item');// Ищет список всех указанных селекторов
 
+var imageUploadEffects = imageForm.querySelector('.img-upload__effects');
+var effectsItems = imageUploadEffects.querySelectorAll('.effects__item');// Ищет список всех указанных селекторов
+/*
+
+var filterContainer = imageForm.querySelector('.img-upload__effects');
+
+filterContainer.addEventListener('click', function (evt) {
+  var target = evt.target;
+  var inputElement = null;
+
+  if (target.tagName === 'SPAN') {
+    // попал
+    inputElement = target.parentElement().closest('input');
+  } else if (target.tagName === 'LABEL') {
+    // попал
+    inputElement = target.closest('input');
+  }
+});
+*/
 for (var i = 0; i < effectsItems.length; i++) { // Обработчик кликов добавляет срабатывание кликов по длине effectsItems
   addThumbnailClickHandler(effectsItems[i]);
 }
 
+var picture = imageUploadPreview.querySelector('img'); // возвращает класс img
+var currentFilter = 'none';
+
 function addThumbnailClickHandler(thumbnail) {
   thumbnail.addEventListener('click', function () { // вешаем обработчик события на thumbnail
     var item = thumbnail.querySelector('.effects__label');// возвращает класс .effects__label
-    var filterName = item.getAttribute('for');// присваивает пременной атрибут .for
-    var picture = imageUploadPreview.querySelector('img');// возвращает класс img
-    picture.removeAttribute('class');// убирает сlass у пременной picture
+    var filterName = item.getAttribute('for').replace('effect-', ''); // присваивает пременной атрибут .for
 
-    if (FILTERS[filterName]) { // если классы в переменных соответствую добавить их picture
-      picture.classList.add(FILTERS[filterName]);
-    }
+    picture.classList.remove(currentFilter);
+
+    currentFilter = FILTERS[filterName];
+    picture.classList.add('effects__preview--' + currentFilter);
+    picture.style.filter = FILTERS[currentFilter]();
   });
 }
 
@@ -169,40 +210,71 @@ var HASHTAG_ERRORS = {
 
 var inputHashtags = document.querySelector('.text__hashtags');// Поик по документу
 
-// функция выводящия ошибку, если не пустой, то вывыведет ошибку из HASHTAG_ERRORS
-inputHashtags.addEventListener('change', function () {
-  // var hashtagsArr = inputHashtags.value.split(' ');
-  var errorCode = checkHashtag(hashtagsArr);// результат действия checkHashtag
+var errorCode = inputHashtags();
+if (errorCode !== '') {
+  inputHashtags.setCustomValidity(HASHTAG_ERRORS[errorCode]);// устанавливает специальное значение из переменной HASHTAG_ERRORS
+} else {
+  inputHashtags.setCustomValidity(errorCode);
+}
 
-  if (errorCode !== '') {
-    inputHashtags.setCustomValidity(HASHTAG_ERRORS[errorCode]);// устанавливает специальное значение из переменной HASHTAG_ERRORS
-  } else {
-    inputHashtags.setCustomValidity(errorCode);
+inputHashtags.addEventListener('input', function () {
+
+  var MAX_SYMVOLS = 25;
+  var MAX_HASHTAG = 5;
+
+  var invalidMessage = [];
+
+  var inputText = window.domElements.textHashtags.value.toLowerCase().trim();
+
+  if (!inputText) {
+    return;
+  }
+
+  var inputHashtags = inputText.split(/\s+/).filter(function (item) {
+    return item !== '';
+  });
+
+  var isStartNoHashtag = inputHashtags.some(function (item) {
+    return item[0] !== '#';
+  });
+
+  if (isStartNoHashtag) {
+    invalidMessage.push('хэш-тег начинается с символа # (решётка)');
+  }
+
+  var isOnlyLatticeHashtag = inputHashtags.some(function (item) {
+    return item === '#';
+  });
+
+  if (isOnlyLatticeHashtag) {
+    invalidMessage.push('хеш-тег не может состоять только из одной решётки');
+  }
+
+  var isSplitSpaceHashtag = inputHashtags.some(function (item) {
+    return item.index0f('#', 1) >= 1;
+  });
+
+  if (isSplitSpaceHashtag) {
+    invalidMessage.push('хэш-теги разделяются пробелами');
+  }
+
+  var isRepeatHashtag = inputHashtags.some(function (item) {
+    return indexOf(item, i + 1) >= i + 1;
+  });
+
+  if (isRepeatHashtag) {
+    invalidMessage.push('один и тот же хэш-тег не может быть использован дважды');
+  }
+
+  var isLongHashtag = inputHashtags.some(function (item) {
+    return item.length > MAX_SYMVOLS;
+  });
+
+  if (isLongHashtag) {
+    invalidMessage.push('максимальная длина одного хэш-тега 20 символов, включая решётку');
+  }
+
+  if (inputHashtags.length > MAX_HASHTAG) {
+    invalidMessage.push('нельзя указать больше пяти хэш-тегов');
   }
 });
-
-// функция проверки хештегов
-// function checkHashtag(array) {
-//   if (array.length > 5) {
-//     return 'max';
-//   }
-//
-//   for (var k = 0; k < array.length; k++) {
-//     if (array[k].length > 20) {
-//       return 'maxLength';
-//     }
-//     if (array[k].indexOf('#') < 0) {
-//       return 'symbol';
-//     }
-//     if (array[k].indexOf('#') > 0) {
-//       return 'symbol_wrong';
-//     }
-//     for (var j = 0; j < array.length; j++) {
-//       if ((array[k].toLowerCase() === array[j].toLowerCase()) && (k !== j)) {
-//         return 'same';
-//       }
-//     }
-//   }
-
-  return '';
-}
