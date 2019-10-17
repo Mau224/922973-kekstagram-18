@@ -137,31 +137,28 @@ buttonlBig.addEventListener('click', function () { // отменяет собы�
 
 // Наложение эффекта на изображение
 var FILTERS = {
-  'chrome': function () {
-    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
-    return 'grayscale(' + (effectValue / 100) + ')';
+  'chrome': function (value) {
+    return 'grayscale(' + (value / 100) + ')';
   }, // Присваение классу эффекта с модификатором
-  'sepia': function () {
-    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
-    return 'sepia(' + (effectValue / 100) + ')';
+  'sepia': function (value) {
+    return 'sepia(' + (value / 100) + ')';
   },
-  'marvin': function () {
-    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
-    return 'marvin(' + (effectValue / 100) + ')';
+  'marvin': function (value) {
+    return 'invert(' + value + '%)';
   },
-  'phobos': function () {
-    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
-    return 'phobos(' + Math.floor(effectValue / 33) + 'px' + ')';
+  'phobos': function (value) {
+    return 'blur(' + Math.floor(value * 3 / 100) + 'px)';
   },
-  'heat': function () {
-    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
-    return 'heat(' + (effectValue / 300) * 1 + ')';
+  'heat': function (value) {
+    return 'brightness(' + (value * 2 / 100 + 1) + ')';
   },
-  'none': 'none'
+  'none': function () {
+    return '';
+  }
 };
 
 var imageUploadEffects = imageForm.querySelector('.img-upload__effects');
-var effectsItems = imageUploadEffects.querySelectorAll('.effects__item');// Ищет список всех указанных селекторов
+var effectsItems = imageUploadEffects.querySelectorAll('.effects__radio');// Ищет список всех указанных селекторов
 /*
 
 var filterContainer = imageForm.querySelector('.img-upload__effects');
@@ -179,6 +176,7 @@ filterContainer.addEventListener('click', function (evt) {
   }
 });
 */
+
 for (var i = 0; i < effectsItems.length; i++) { // Обработчик кликов добавляет срабатывание кликов по длине effectsItems
   addThumbnailClickHandler(effectsItems[i]);
 }
@@ -187,54 +185,49 @@ var picture = imageUploadPreview.querySelector('img'); // возвращает �
 var currentFilter = 'none';
 
 function addThumbnailClickHandler(thumbnail) {
-  thumbnail.addEventListener('click', function () { // вешаем обработчик события на thumbnail
-    var item = thumbnail.querySelector('.effects__label');// возвращает класс .effects__label
-    var filterName = item.getAttribute('for').replace('effect-', ''); // присваивает пременной атрибут .for
+  thumbnail.addEventListener('change', function (evt) { // вешаем обработчик события на thumbnail
+    var filterName = evt.target.value;
 
-    picture.classList.remove(currentFilter);
+    picture.classList.remove('effects__preview--' + currentFilter);
+    currentFilter = filterName;
+    var checkEffectsNone = document.querySelector('.effect-level');
+    checkEffectsNone.classList.add('visually-hidden');
+    var checkEffectsScroll = function () {
+      if (currentFilter === 'none') {
+        checkEffectsNone.classList.add('visually-hidden');
+      } else {
+        checkEffectsNone.classList.remove('visually-hidden');
+      }
+    };
+    checkEffectsScroll();
 
-    currentFilter = FILTERS[filterName];
     picture.classList.add('effects__preview--' + currentFilter);
-    picture.style.filter = FILTERS[currentFilter]();
+    var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
+    picture.style.filter = FILTERS[currentFilter](effectValue);
   });
 }
 
 // Добавление хэш-тегов и валидация
-var HASHTAG_ERRORS = {
-  'symbol': 'Отсутствует обязательный символ #',
-  'symbol_wrong': 'Символ # должен стоять в начале хештега',
-  'max': 'Максимальное кол-во хештегов должно быть 5',
-  'same': 'Есть повторяющиеся хештеги',
-  'maxLength': 'Слишком длинный хештег'
-};
 
 var inputHashtags = document.querySelector('.text__hashtags');// Поик по документу
 
-var errorCode = inputHashtags();
-if (errorCode !== '') {
-  inputHashtags.setCustomValidity(HASHTAG_ERRORS[errorCode]);// устанавливает специальное значение из переменной HASHTAG_ERRORS
-} else {
-  inputHashtags.setCustomValidity(errorCode);
-}
-
-inputHashtags.addEventListener('input', function () {
-
-  var MAX_SYMVOLS = 25;
+var checkHashTags = function () {
+  var MAX_SYMVOLS = 20;
   var MAX_HASHTAG = 5;
 
   var invalidMessage = [];
 
-  var inputText = window.domElements.textHashtags.value.toLowerCase().trim();
+  var inputText = inputHashtags.value.toLowerCase().trim();
 
   if (!inputText) {
-    return;
+    return false;
   }
 
-  var inputHashtags = inputText.split(/\s+/).filter(function (item) {
+  var parts = inputText.split(/\s+/).filter(function (item) {
     return item !== '';
   });
 
-  var isStartNoHashtag = inputHashtags.some(function (item) {
+  var isStartNoHashtag = parts.some(function (item) {
     return item[0] !== '#';
   });
 
@@ -242,7 +235,7 @@ inputHashtags.addEventListener('input', function () {
     invalidMessage.push('хэш-тег начинается с символа # (решётка)');
   }
 
-  var isOnlyLatticeHashtag = inputHashtags.some(function (item) {
+  var isOnlyLatticeHashtag = parts.some(function (item) {
     return item === '#';
   });
 
@@ -250,23 +243,23 @@ inputHashtags.addEventListener('input', function () {
     invalidMessage.push('хеш-тег не может состоять только из одной решётки');
   }
 
-  var isSplitSpaceHashtag = inputHashtags.some(function (item) {
-    return item.index0f('#', 1) >= 1;
+  var isSplitSpaceHashtag = parts.some(function (item) {
+    return item.indexOf('#', 1) >= 1;
   });
 
   if (isSplitSpaceHashtag) {
     invalidMessage.push('хэш-теги разделяются пробелами');
   }
 
-  var isRepeatHashtag = inputHashtags.some(function (item) {
-    return indexOf(item, i + 1) >= i + 1;
+  var isRepeatHashtag = parts.some(function (item, index) {
+    return parts.indexOf(item, index + 1) >= index + 1;
   });
 
   if (isRepeatHashtag) {
     invalidMessage.push('один и тот же хэш-тег не может быть использован дважды');
   }
 
-  var isLongHashtag = inputHashtags.some(function (item) {
+  var isLongHashtag = parts.some(function (item) {
     return item.length > MAX_SYMVOLS;
   });
 
@@ -274,7 +267,19 @@ inputHashtags.addEventListener('input', function () {
     invalidMessage.push('максимальная длина одного хэш-тега 20 символов, включая решётку');
   }
 
-  if (inputHashtags.length > MAX_HASHTAG) {
+  if (parts.length > MAX_HASHTAG) {
     invalidMessage.push('нельзя указать больше пяти хэш-тегов');
+  }
+
+  return invalidMessage.join('. \n');
+};
+
+inputHashtags.addEventListener('input', function () {
+  var errorCode = checkHashTags();
+
+  if (errorCode !== '') {
+    inputHashtags.setCustomValidity(errorCode);// устанавливает специальное значение из переменной HASHTAG_ERRORS
+  } else {
+    inputHashtags.setCustomValidity('');
   }
 });
