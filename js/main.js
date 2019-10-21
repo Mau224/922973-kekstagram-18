@@ -77,22 +77,43 @@ var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
 
 var createBigPicture = function (photoInfo) {
-  var bigPictureElement = document.querySelector('.big-picture__img img');
-  bigPictureElement.setAttribute('src', photoInfo.url);
+  var bigPictureElement = document.querySelector('.big-picture__img');
+  var bigPictureImg = document.querySelector('img');
+  bigPictureElement.src = bigPictureImg.url;
   var bigPictureLikesElement = document.querySelector('.likes-count');
   bigPictureLikesElement.textContent = photoInfo.likes;
   var bigPictureCommentsElement = document.querySelector('.comments-count');
   bigPictureCommentsElement.textContent = photoInfo.comments.length;
-  var bigPictureDescription = document.querySelector('.social__comments');
+  var bigPictureDescription = document.querySelector('.social__caption');
   bigPictureDescription.textContent = photoInfo.description;
 };
-createBigPicture();
+createBigPicture(renderComments);
+
+function renderComments(data) {
+// Список комментариев под фотографией
+  var inquiryTemplate = document.querySelector('#my__comment');
+  var callTemplate = inquiryTemplate.querySelector('.social__comment'); // вызвали его содержание/тег  li
+  var elementRender = document.querySelector('.social__comments');
+
+  var container = document.createDocumentFragment();
+  for (var i = 0; i < data.length; i++) {
+    var comment = data[i];//  елемент массива который выводит обект
+    var element = callTemplate.cloneNode(true); // клонирование тег li и дети
+    var commentImg = element.querySelector('img');
+    commentImg.src = comment.avatar;
+    commentImg.alt = comment.names;
+    var socialText = element.querySelector('.social__text');
+    socialText.textContent = comment.message;// длина массива(рандомная)
+    container.appendChild(element);// добавляет клонированый li  и детей в ОП
+  }
+  elementRender.appendChild(container);// должен вставить в ul
+}
 
 var commentCount = document.querySelector('.social__comment-count ');
-commentCount.classList.add('commentCount');
+commentCount.classList.add('.visually-hidden');
 
-var commentLoad = document.querySelector('.social__comment-count ');
-commentLoad.classList.add('commentCount');
+var commentLoad = document.querySelector('.comments-loader');
+commentLoad.classList.add('.visually-hidden');
 
 var imgUploadForm = document.querySelector('.img-upload__form');
 var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
