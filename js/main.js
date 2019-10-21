@@ -92,21 +92,21 @@ createBigPicture(renderComments);
 function renderComments(data) {
 // Список комментариев под фотографией
   var inquiryTemplate = document.querySelector('#my__comment');
-  var callTemplate = inquiryTemplate.querySelector('.social__comment'); // вызвали его содержание/тег  li
+  var callTemplate = inquiryTemplate.querySelector('.social__comment'); // вызвает li
   var elementRender = document.querySelector('.social__comments');
 
-  var container = document.createDocumentFragment();
+  var commentList = document.createDocumentFragment();
   for (var i = 0; i < data.length; i++) {
-    var comment = data[i];//  елемент массива который выводит обект
+    var comment = data[i];//  элемент массива который выводит объект
     var element = callTemplate.cloneNode(true); // клонирование тег li и дети
     var commentImg = element.querySelector('img');
     commentImg.src = comment.avatar;
     commentImg.alt = comment.names;
     var socialText = element.querySelector('.social__text');
-    socialText.textContent = comment.message;// длина массива(рандомная)
-    container.appendChild(element);// добавляет клонированый li  и детей в ОП
+    socialText.textContent = comment.message;// длина массива
+    commentList.appendChild(element);// добавляет клонированый li
   }
-  elementRender.appendChild(container);// должен вставить в ul
+  elementRender.appendChild(commentList);// должен вставить в ul
 }
 
 var commentCount = document.querySelector('.social__comment-count ');
