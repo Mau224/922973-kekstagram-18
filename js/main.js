@@ -73,6 +73,27 @@ var renderPictures = function () {
 };
 renderPictures();
 
+var bigPicture = document.querySelector('.big-picture');
+bigPicture.classList.remove('hidden');
+
+var createBigPicture = function (photoInfo) {
+  var bigPictureElement = document.querySelector('.big-picture__img img');
+  bigPictureElement.setAttribute('src', photoInfo.url);
+  var bigPictureLikesElement = document.querySelector('.likes-count');
+  bigPictureLikesElement.textContent = photoInfo.likes;
+  var bigPictureCommentsElement = document.querySelector('.comments-count');
+  bigPictureCommentsElement.textContent = photoInfo.comments.length;
+  var bigPictureDescription = document.querySelector('.social__comments');
+  bigPictureDescription.textContent = photoInfo.description;
+};
+createBigPicture();
+
+var commentCount = document.querySelector('.social__comment-count ');
+commentCount.classList.add('commentCount');
+
+var commentLoad = document.querySelector('.social__comment-count ');
+commentLoad.classList.add('commentCount');
+
 var imgUploadForm = document.querySelector('.img-upload__form');
 var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
 var uploadButton = imgUploadForm.querySelector('#upload-file');
