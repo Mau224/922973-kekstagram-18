@@ -92,14 +92,13 @@ var createBigPicture = function (photoInfo) {
   photoInfo.querySelector('.social__text');
   photoInfo.textContent = pictures[0].comments[0].message;
 };
-createBigPicture(renderComments);
+createBigPicture(photoDescriptions[0]);
 
-function renderComments(data) {
+var renderComments = function (data) {
 // Список комментариев под фотографией
   var inquiryTemplate = document.querySelector('#my__comment');
   var callTemplate = inquiryTemplate.querySelector('.social__comment'); // вызвает li
   var elementRender = document.querySelector('.social__comments');
-
   var commentList = document.createDocumentFragment();
   for (var i = 0; i < data.length; i++) {
     var comment = data[i];//  элемент массива который выводит объект
@@ -112,7 +111,8 @@ function renderComments(data) {
     commentList.appendChild(element);// добавляет клонированый li
   }
   elementRender.appendChild(commentList);// должен вставить в ul
-}
+};
+renderComments();
 
 var commentCount = document.querySelector('.social__comment-count ');
 commentCount.classList.add('.visually-hidden');
