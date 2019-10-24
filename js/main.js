@@ -21,34 +21,37 @@ var Resize = {
 
 var ESC_KEY = 27;
 
-var pictures = document.querySelector('.pictures');
+var pictures = document.querySelector('.pictures');// big-pictures
 var photoTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
 var photoDescriptions = [];
-var photoComments = [];
+
+var getRandomInt = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 
 var getComments = function () {
-  for (var i = 0; i < PHOTOS_COUNT; i++) {
+  var photoComments = [];
+  for (var i = 0; i < getRandomInt(1, AVATAR_MAX); i++) {
     photoComments.push({
-      url: 'img/avatar-' + ((Math.floor(Math.random() * (AVATAR_MAX - AVATAR_MIN + 1)) + AVATAR_MIN)) + '.svg',
-      message: COMMENTS[Math.floor(Math.random() * COMMENTS.length)],
-      name: NAMES[Math.floor(Math.random() * NAMES.length)]
+      url: 'img/avatar-' + getRandomInt(AVATAR_MIN, AVATAR_MAX) + '.svg',
+      message: COMMENTS[getRandomInt(0, COMMENTS.length - 1)],
+      name: NAMES[getRandomInt(0, NAMES.length - 1)]
     });
   }
   return photoComments;
 };
 
-var photoCommentsArr = getComments();
 
 var getDiscriptionsPhotos = function () {
   for (var i = 0; i < PHOTOS_COUNT; i++) {
     photoDescriptions.push({
       url: 'photos/' + (i + 1) + '.jpg',
-      description: DESCRIPTIONS[Math.floor(Math.random() * DESCRIPTIONS.length)],
-      likes: Math.floor(Math.random() * (LIKES_MAX - LIKES_MIN + 1)) + LIKES_MIN,
-      comments: photoCommentsArr.slice(Math.floor(Math.random() * photoCommentsArr.length))
+      description: DESCRIPTIONS[getRandomInt(0, DESCRIPTIONS.length - 1)],
+      likes: getRandomInt(LIKES_MIN, LIKES_MAX),
+      comments: getComments()
     });
   }
 };
@@ -72,6 +75,63 @@ var renderPictures = function () {
   pictures.appendChild(fragment);
 };
 renderPictures();
+
+var bigPicture = document.querySelector('.big-picture');
+bigPicture.classList.remove('hidden');
+
+var renderComments = function (data) {
+  var socialComments = bigPicture.querySelector('.social__comments');
+
+  var callTemplate = socialComments.querySelector('.social__comment');
+  socialComments.innerHTML = '';
+
+  var commentList = document.createDocumentFragment();
+
+  for (var i = 0; i < data.length; i++) {
+    var element = callTemplate.cloneNode(true); // клонирование тег li и дети
+    var commentImg = element.querySelector('img');
+    commentImg.src = data[i].url;
+    commentImg.alt = data[i].names;
+    var socialText = element.querySelector('.social__text');
+    socialText.textContent = data[i].message;// длина массива
+    commentList.appendChild(element);// добавляет клонированый li
+  }
+  socialComments.appendChild(commentList);// должен вставить в ul
+};
+
+var createBigPicture = function (photoInfo) {
+  var bigPictureElement = document.querySelector('.big-picture__img img');
+  bigPictureElement.src = photoInfo.url;
+
+  var bigPictureLikesElement = document.querySelector('.likes-count');
+  bigPictureLikesElement.textContent = photoInfo.likes;
+
+  var bigPictureCommentsElement = document.querySelector('.comments-count');
+  bigPictureCommentsElement.textContent = photoInfo.comments.length;
+
+  var bigPictureDescription = document.querySelector('.social__caption');
+  bigPictureDescription.textContent = photoInfo.description;
+
+  var avatar = bigPicture.querySelector('.social__picture');
+
+  avatar.src = photoInfo.comments[0].url;
+  avatar.alt = photoInfo.comments[0].name;
+  var socialText = bigPicture.querySelector('.social__text');
+  socialText.textContent = photoInfo.comments[0].message;
+
+  var renderCommentCout = document.querySelector('.social__comment-count');
+  renderCommentCout.innerHTML = '';
+  renderCommentCout.textContent = photoInfo.comments.length + ' ' + 'из' + ' ' + photoInfo.comments.length + ' ' + 'коментариев';
+
+  renderComments(photoInfo.comments);
+};
+createBigPicture(photoDescriptions[0]);
+
+var commentCount = document.querySelector('.social__comment-count ');
+commentCount.classList.add('.visually-hidden');
+
+var commentLoad = document.querySelector('.comments-loader');
+commentLoad.classList.add('.visually-hidden');
 
 var imgUploadForm = document.querySelector('.img-upload__form');
 var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
