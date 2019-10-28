@@ -71,6 +71,16 @@ var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
 var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
 
+// Функция закрывает болшую фотографию
+// var closedBigPicture = function () {
+//   bigPicture.classList.add('hidden');
+//   bigPictureClose.removeEventListener('click', pictureCloseClickHandler);
+// };
+
+// var pictureCloseClickHandler = function () {
+//   closedBigPicture();
+// };
+
 var renderPictures = function () {
   var fragment = document.createDocumentFragment();
 
@@ -81,11 +91,12 @@ var renderPictures = function () {
 };
 renderPictures();
 
-var renderBigPicture = function (post) {
+var renderBigPicture = function () { // var renderBigPicture = function (photoInfo) {
   var onCommentsLoaderClick = function () {
     renderComments();
   };
   commentLoad.addEventListener('click', onCommentsLoaderClick);
+};
 
 // Открывает пользовательский пост
 var openBigPicture = function (data) {
@@ -97,7 +108,7 @@ var openBigPicture = function (data) {
 
 var onBigPictureCloseClick = function () {
   closeBigPicture();
-  };
+};
 
 var onBigPictureCloseEnterPress = function (evt) {
   if (evt.keyCode === ESC_KEY) {
@@ -106,17 +117,17 @@ var onBigPictureCloseEnterPress = function (evt) {
 };
 var onBigPictureEscPress = function (evt) {
   if (evt.keyCode === ENTER_KEY) {
-  openBigPicture();
+    openBigPicture();
   }
 };
 
 // Закрывает пользовательский пост
-  var closeBigPicture = function () {
-    bigPicture.classList.add('hidden');
-    bigPictureClose.removeEventListener('click', onBigPictureCloseClick);
-    bigPictureClose.removeEventListener('keydown', onBigPictureCloseEnterPress);
-    document.removeEventListener('keydown', onBigPictureEscPress);
-  };
+var closeBigPicture = function () {
+  bigPicture.classList.add('hidden');
+  bigPictureClose.removeEventListener('click', onBigPictureCloseClick);
+  bigPictureClose.removeEventListener('keydown', onBigPictureCloseEnterPress);
+  document.removeEventListener('keydown', onBigPictureEscPress);
+};
 
 var renderComments = function (data) {
   var socialComments = bigPicture.querySelector('.social__comments');
@@ -365,12 +376,3 @@ inputHashtags.addEventListener('input', function () {
     inputHashtags.setCustomValidity('');
   }
 });
-var inputComments = document.querySelector('.text__description');
-
-inputComments.addEventListener('change', function () {
-  var str = inputComments.value;
-  if (str.length > 140) {
-    inputComments.setCustomValidity('Комментарий не должен превышать 140-ка символов');
-  } else {
-    inputComments.setCustomValidity('');
-  };
