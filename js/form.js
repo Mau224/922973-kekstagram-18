@@ -6,7 +6,7 @@
     MIN: 25,
     MAX: 100
   };
-  var ESC_KEY = 27;
+
 
   var imgUploadForm = document.querySelector('.img-upload__form');
   var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
@@ -16,7 +16,7 @@
 
 
   var onEscButtonCloseEdit = function (evt) {
-    if (evt.keyCode === ESC_KEY && evt.target !== hashtagInput && !evt.target.classList.contains('.text__description')) {
+    if (evt.keyCode === window.ESC_KEY && evt.target !== hashtagInput && !evt.target.classList.contains('.text__description')) {
       closeEdit();
     }
   };
@@ -94,6 +94,55 @@
 
   var imageUploadEffects = imageForm.querySelector('.img-upload__effects');
   var effectsItems = imageUploadEffects.querySelectorAll('.effects__radio');// Ищет список всех указанных селекторов
+
+  var changePinPosition = function (pinPosition) {
+
+    var sliderWidth = pin.parentElement.offsetWidth;
+
+    if (pinPosition > sliderWidth) {
+      pinPosition = sliderWidth;
+    } else if (pinPosition < 0) {
+      pinPosition = 0;
+    }
+
+    pin.style.left = pinPosition + 'px';
+    var effectLevel = Math.round(pin.offsetLeft * 100 / sliderWidth);
+    document.querySelector('.effect-level__value').value = effectLevel;
+    document.querySelector('.effect-level__depth').style.width = effectLevel + '%';
+  };
+
+  var pin = document.querySelector('.effect-level__pin');
+  pin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startX = evt.clientX;
+
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shiftX = startX - moveEvt.clientX;
+      var pinPosition = (pin.offsetLeft - shiftX);
+
+      changePinPosition(pinPosition);
+
+      startX = moveEvt.clientX;
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+
+      FILTERS.currentFilter();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
 
   var addThumbnailClickHandler = function (thumbnail) {
     thumbnail.addEventListener('change', function (evt) { // вешаем обработчик события на thumbnail
