@@ -1,27 +1,31 @@
 'use strict';
 
-(function () {
+window.preview = (function () {
 
   var ENTER_KEY = 13;
 
   var bigPicture = document.querySelector('.big-picture');
+
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
   var commentLoad = bigPicture.querySelector('.comments-loader');
   commentLoad.classList.add('visually-hidden');
+  window.photoClosed = function () {
+    window.photoElement.addEventListener('click', function () {
+      bigPicture.classList.remove('hidden');
+      createBigPicture(window.photo);
+    });
+
+    // обработчик по enter
+    window.photoElement.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ENTER_KEY) {
+        createBigPicture(window.photo);
+      }
+    });
+    return window.photoElement;
+  };
 
 
-  window.photoElement.addEventListener('click', function () {
-    bigPicture.classList.remove('hidden');
-    createBigPicture(/* photo */);
-  });
-
-  // обработчик по enter
-  window.photoElement.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEY) {
-      createBigPicture(/* photo */);
-    }
-  });
-
+  // Закрывает пользовательский пост
   var closeBigPicture = function () {
     bigPicture.classList.add('hidden');
 
@@ -38,7 +42,6 @@
       closeBigPicture();
     }
   };
-
 
   var renderComments = function (data) {
     var socialComments = bigPicture.querySelector('.social__comments');
