@@ -1,6 +1,6 @@
 'use strict';
 
-window.validation = (function () {
+(function () {
 
   // Добавление хэш-тегов и валидация
 
@@ -69,13 +69,8 @@ window.validation = (function () {
     return invalidMessage.join('. \n');
   };
 
-  inputHashtags.addEventListener('input', function () {
-    var errorCode = checkHashTags();
-
-    if (errorCode !== '') {
-      inputHashtags.setCustomValidity(errorCode);// устанавливает специальное значение из переменной HASHTAG_ERRORS
-    } else {
-      inputHashtags.setCustomValidity('');
-    }
-  });
+  window.validation = {
+    element: inputHashtags,
+    check: checkHashTags
+  };
 })();

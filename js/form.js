@@ -1,6 +1,6 @@
 'use strict';
 
-window.form = (function () {
+(function () {
 
   var Resize = {
     MIN: 25,
@@ -121,6 +121,16 @@ window.form = (function () {
   for (var i = 0; i < effectsItems.length; i++) { // Обработчик кликов добавляет срабатывание кликов по длине effectsItems
     addThumbnailClickHandler(effectsItems[i]);
   }
+
+  window.validation.element.addEventListener('input', function () {
+    var errorCode = window.validation.check();
+
+    if (errorCode !== '') {
+      window.validation.element.setCustomValidity(errorCode);// устанавливает специальное значение из переменной HASHTAG_ERRORS
+    } else {
+      window.validation.element.setCustomValidity('');
+    }
+  });
 
   var picture = imageUploadPreview.querySelector('img'); // возвращает класс img
   var currentFilter = 'none';

@@ -1,9 +1,6 @@
 'use strict';
 
-window.preview = (function () {
-
-  var ENTER_KEY = 13;
-
+(function () {
   var bigPicture = document.querySelector('.big-picture');
 
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
@@ -17,7 +14,7 @@ window.preview = (function () {
 
     // обработчик по enter
     window.photoElement.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ENTER_KEY) {
+      if (evt.keyCode === window.ENTER_KEY) {
         createBigPicture(window.photo);
       }
     });
@@ -38,7 +35,7 @@ window.preview = (function () {
   };
 
   var onBigPictureEscPress = function (evt) {
-    if (evt.keyCode === window.ESC_KEY) {
+    if (evt.keyCode === window.util.ESC_KEY) {
       closeBigPicture();
     }
   };
@@ -95,5 +92,10 @@ window.preview = (function () {
     bigPictureClose.addEventListener('click', onBigPictureCloseClick);
 
     document.addEventListener('keydown', onBigPictureEscPress);
+  };
+
+  window.preview = {
+    element: bigPicture,
+    show: createBigPicture
   };
 })();
