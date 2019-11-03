@@ -116,6 +116,7 @@
     evt.preventDefault();
 
     var startX = evt.clientX;
+    var dragged = false;
 
 
     var onMouseMove = function (moveEvt) {
@@ -133,10 +134,18 @@
       upEvt.preventDefault();
 
 
-      FILTERS.currentFilter();
+      FILTERS[currentFilter]();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+
+      if (dragged) {
+        var onClickPreventDefault = function () {
+          evt.preventDefault();
+          document.removeEventListener('click', onClickPreventDefault);
+        };
+        document.addEventListener('click', onClickPreventDefault);
+      }
     };
 
     document.addEventListener('mousemove', onMouseMove);
@@ -151,12 +160,12 @@
       picture.classList.remove('effects__preview--' + currentFilter);
       currentFilter = filterName;
       var checkEffectsNone = document.querySelector('.effect-level');
-      checkEffectsNone.classList.add('visually-hidden');
+      checkEffectsNone.classList.add('hidden');
       var checkEffectsScroll = function () {
         if (currentFilter === 'none') {
-          checkEffectsNone.classList.add('visually-hidden');
+          checkEffectsNone.classList.add('hidden');
         } else {
-          checkEffectsNone.classList.remove('visually-hidden');
+          checkEffectsNone.classList.remove('hidden');
         }
       };
       checkEffectsScroll();
