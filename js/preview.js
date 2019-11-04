@@ -35,7 +35,7 @@
   };
 
   var onBigPictureEscPress = function (evt) {
-    if (evt.keyCode === window.util.ESC_KEY) {
+    if (evt.keyCode === window.ESC_KEY) {
       closeBigPicture();
     }
   };
