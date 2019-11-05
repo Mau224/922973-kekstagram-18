@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var ENTER_KEY = 13;
 
   var pictures = document.querySelector('.pictures');
   var photoTemplate = document.querySelector('#picture')
@@ -21,7 +20,7 @@
 
     // обработчик по enter
     photoElement.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ENTER_KEY) {
+      if (evt.keyCode === window.ENTER_KEY) {
         window.preview.show(photo);
       }
     });
@@ -37,4 +36,25 @@
     pictures.appendChild(fragment);
   };
   renderPictures();
+
+  // var successHandler = function (imagesArray) {
+  //
+  //   window.photo = imagesArray.map(function (photo, id) {
+  //     photo.id = id + 1;
+  //     return photo;
+  //   });
+  //
+  //   window.onSuccessPhoto(window.photo);
+  // };
+
+  var errorHandler = function (errorMessage) {
+    var mainSection = document.querySelector('main');
+    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+    var errorTemplateBlock = errorTemplate.cloneNode(true);
+
+    errorTemplateBlock.querySelector('.error__title').textContent = errorMessage;
+    mainSection.insertAdjacentElement('afterbegin', errorTemplateBlock);
+  };
+
+  window.load('https://js.dump.academy/kekstagram/data', errorHandler);
 })();
