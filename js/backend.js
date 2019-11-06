@@ -40,6 +40,6 @@
 
   window.backend = {
     load: load,
-    save: download,
+    download: download,
   };
 })();

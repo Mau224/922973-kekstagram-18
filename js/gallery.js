@@ -37,17 +37,17 @@
   };
   renderPictures();
 
-  // var successHandler = function (imagesArray) {
-  //
-  //   window.photo = imagesArray.map(function (photo, id) {
-  //     photo.id = id + 1;
-  //     return photo;
-  //   });
-  //
-  //   window.onSuccessPhoto(window.photo);
-  // };
+  var onSuccess = function (imagesArray) {
 
-  var errorHandler = function (errorMessage) {
+    window.photo = imagesArray.map(function (photo, id) {
+      photo.id = id + 1;
+      return photo;
+    });
+
+    window.onSuccessPhoto(window.photo);
+  };
+
+  var onError = function (errorMessage) {
     var mainSection = document.querySelector('main');
     var errorTemplate = document.querySelector('#error').content.querySelector('.error');
     var errorTemplateBlock = errorTemplate.cloneNode(true);
@@ -56,5 +56,5 @@
     mainSection.insertAdjacentElement('afterbegin', errorTemplateBlock);
   };
 
-  window.load('https://js.dump.academy/kekstagram/data', errorHandler);
+  window.backend.load('https://js.dump.academy/kekstagram/data', onSuccess, onError);
 })();
