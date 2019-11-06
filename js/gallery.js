@@ -37,14 +37,15 @@
   };
   renderPictures();
 
+
   var onSuccess = function (imagesArray) {
 
-    window.photo = imagesArray.map(function (photo, id) {
+    var photos = imagesArray.slice(function (photo, id) {
       photo.id = id + 1;
       return photo;
     });
 
-    window.onSuccessPhoto(window.photo);
+    onSuccess(photos);
   };
 
   var onError = function (errorMessage) {
@@ -56,5 +57,7 @@
     mainSection.insertAdjacentElement('afterbegin', errorTemplateBlock);
   };
 
-  window.backend.load('https://js.dump.academy/kekstagram/data', onSuccess, onError);
+  window.backend.load(onSuccess, onError);
+  // window.gallery = photos;
+
 })();

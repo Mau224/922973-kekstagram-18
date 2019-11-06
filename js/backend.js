@@ -32,13 +32,15 @@
     xhr.send();
     return xhr;
   };
+
   var download = function (data, onSuccess, onError) {
     var xhr = setup(onSuccess, onError);
     xhr.open('POST', SERVER_URL);
-    xhr.send();
+    xhr.send(data);
   };
 
   window.backend = {
+    setup: setup,
     load: load,
     download: download,
   };
