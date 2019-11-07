@@ -2,6 +2,9 @@
 
 (function () {
 
+  var MAX_PHOTOS = 25;
+  var photos = [];
+
   var pictures = document.querySelector('.pictures');
   var photoTemplate = document.querySelector('#picture')
     .content
@@ -27,26 +30,21 @@
     return photoElement;
   };
 
-  var renderPictures = function () {
+  var renderPictures = function (items) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < window.data.length; i++) {
-      fragment.appendChild(renderPicture(window.data[i]));
+    for (var i = 0; i < items.length; i++) {
+      fragment.appendChild(renderPicture(items[i]));
     }
     pictures.appendChild(fragment);
   };
-  renderPictures();
 
 
   var onSuccess = function (imagesArray) {
-
-    var photos = imagesArray.slice(function (photo, id) {
-      photo.id = id + 1;
-      return photo;
-    });
-
-    onSuccess(photos);
+    photos = imagesArray.slice(0, MAX_PHOTOS);
+    renderPictures(photos);
   };
+
 
   var onError = function (errorMessage) {
     var mainSection = document.querySelector('main');
@@ -55,6 +53,12 @@
 
     errorTemplateBlock.querySelector('.error__title').textContent = errorMessage;
     mainSection.insertAdjacentElement('afterbegin', errorTemplateBlock);
+    var errorButton = document.querySelector('.error_close');
+    // var closePopup = document.querySelector('.error__inner');
+    errorButton.addEventListener('click', function () {
+      mainSection.remove(onError);
+    });
+
   };
 
   window.backend.load(onSuccess, onError);
