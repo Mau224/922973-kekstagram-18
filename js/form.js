@@ -13,10 +13,11 @@
   var uploadButton = imgUploadForm.querySelector('#upload-file');
   var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
   var hashtagInput = imgUploadForm.querySelector('.text__hashtags');
+  var main = document.querySelector('.main');
 
 
   var onEscButtonCloseEdit = function (evt) {
-    if (evt.keyCode === window.ESC_KEY && evt.target !== hashtagInput && !evt.target.classList.contains('.text__description')) {
+    if (evt.keyCode === window.util.ESC_KEY && evt.target !== hashtagInput && !evt.target.classList.contains('.text__description')) {
       closeEdit();
     }
   };
@@ -192,5 +193,43 @@
 
   var picture = imageUploadPreview.querySelector('img'); // возвращает класс img
   var currentFilter = 'none';
+
+  // Создание кнопки отправки формы
+  imgUploadForm.addEventListener('submit', function (evt) {
+    if (imgUploadForm.checkValidity()) {
+      evt.preventDefault();
+      window.backend.load(new FormData(imgUploadForm));
+      closeEdit();
+    }
+  });
+
+  // попробовал сделать popup,но оно не отображается
+  // var createSuccess = function () {
+  //   var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  //   var fragment = document.createDocumentFragment(section);
+  //   var section = successTemplate.cloneNode(true);
+  //   fragment.appendChild(section);
+  //   main.appendChild(fragment);
+
+  var successButton = main.querySelector('.success__button');
+  successButton.addEventListener('click', cleanSuccess);
+  main.addEventListener('click', cleanSuccess);
+  document.addEventListener('keydown', window.util.onSuccessMessageEscPress);
+
+  var cleanSuccess = function () {
+    var successMessagePopup = document.querySelector('.success');
+    main.removeChild(successMessagePopup);
+  };
+
+
+  var errorButton = main.querySelector('.error_close');
+  errorButton.addEventListener('click', cleanError);
+  main.addEventListener('click', cleanError);
+  document.addEventListener('keydown', window.util.errorMessageEscPress);
+
+  var cleanError = function () {
+    var errorMessagePopup = document.querySelector('.error');
+    main.removeChild(errorMessagePopup);
+  };
 
 })();

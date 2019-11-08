@@ -9,10 +9,25 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
+  var onSuccessMessageEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEY) {
+      window.cleanSuccessMessage();
+    }
+  };
+
+  var errorMessageEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEY) {
+      window.cleanErrorMessage();
+    }
+  };
+
+
   window.util = {
     ESC_KEY: ESC_KEY,
     ENTER_KEY: ENTER_KEY,
-    getRandomInt: getRandomInt
+    getRandomInt: getRandomInt,
+    onSuccessMessageEscPress: onSuccessMessageEscPress,
+    errorMessageEscPress: errorMessageEscPress,
   };
 
 })();
