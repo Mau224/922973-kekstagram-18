@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var SERVER_URL = 'https://js.dump.academy/kekstagram';
+  var SERVER_URL = 'https://js.dump.academy/keksagram';
   var STATUS_OK = 200;
   var MAX_TIME = 10000;
   var setup = function (onSuccess, onError) {

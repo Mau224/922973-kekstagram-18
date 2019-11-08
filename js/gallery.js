@@ -54,14 +54,11 @@
     errorTemplateBlock.querySelector('.error__title').textContent = errorMessage;
     mainSection.insertAdjacentElement('afterbegin', errorTemplateBlock);
     var errorButton = document.querySelector('.error_close');
-    // var closePopup = document.querySelector('.error__inner');
     errorButton.addEventListener('click', function () {
-      mainSection.remove(onError);
+      mainSection.removeChild(errorTemplateBlock);
     });
 
   };
 
   window.backend.load(onSuccess, onError);
-  // window.gallery = photos;
-
 })();
