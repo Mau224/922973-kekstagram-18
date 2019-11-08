@@ -1,7 +1,9 @@
 'use strict';
 
 (function () {
-  var ENTER_KEY = 13;
+
+  var MAX_PHOTOS = 25;
+  var photos = [];
 
   var pictures = document.querySelector('.pictures');
   var photoTemplate = document.querySelector('#picture')
@@ -21,20 +23,42 @@
 
     // обработчик по enter
     photoElement.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ENTER_KEY) {
+      if (evt.keyCode === window.ENTER_KEY) {
         window.preview.show(photo);
       }
     });
     return photoElement;
   };
 
-  var renderPictures = function () {
+  var renderPictures = function (items) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < window.data.length; i++) {
-      fragment.appendChild(renderPicture(window.data[i]));
+    for (var i = 0; i < items.length; i++) {
+      fragment.appendChild(renderPicture(items[i]));
     }
     pictures.appendChild(fragment);
   };
-  renderPictures();
+
+
+  var onSuccess = function (imagesArray) {
+    photos = imagesArray.slice(0, MAX_PHOTOS);
+    renderPictures(photos);
+  };
+
+
+  var onError = function (errorMessage) {
+    var mainSection = document.querySelector('main');
+    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+    var errorTemplateBlock = errorTemplate.cloneNode(true);
+
+    errorTemplateBlock.querySelector('.error__title').textContent = errorMessage;
+    mainSection.insertAdjacentElement('afterbegin', errorTemplateBlock);
+    var errorButton = document.querySelector('.error_close');
+    errorButton.addEventListener('click', function () {
+      mainSection.removeChild(errorTemplateBlock);
+    });
+
+  };
+
+  window.backend.load(onSuccess, onError);
 })();

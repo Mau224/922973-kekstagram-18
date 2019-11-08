@@ -51,7 +51,7 @@
     for (var i = 0; i < data.length; i++) {
       var element = callTemplate.cloneNode(true); // клонирование тег li и дети
       var commentImg = element.querySelector('img');
-      commentImg.src = data[i].url;
+      commentImg.src = data[i].avatar;
       commentImg.alt = data[i].names;
       var socialText = element.querySelector('.social__text');
       socialText.textContent = data[i].message;// длина массива
@@ -72,7 +72,7 @@
 
     var avatar = bigPicture.querySelector('.social__picture');
 
-    avatar.src = photoInfo.comments[0].url;
+    avatar.src = photoInfo.comments[0].avatar;
     avatar.alt = photoInfo.comments[0].name;
     var socialText = bigPicture.querySelector('.social__text');
     socialText.textContent = photoInfo.comments[0].message;
