@@ -43,6 +43,7 @@
   var onSuccess = function (imagesArray) {
     photos = imagesArray.slice(0, MAX_PHOTOS);
     renderPictures(photos);
+    window.createSuccess(photos);
   };
 
 

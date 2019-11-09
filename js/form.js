@@ -193,15 +193,31 @@
 
   var picture = imageUploadPreview.querySelector('img'); // возвращает класс img
   var currentFilter = 'none';
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
   // Создание кнопки отправки формы
   imgUploadForm.addEventListener('submit', function (evt) {
     if (imgUploadForm.checkValidity()) {
       evt.preventDefault();
-      window.backend.load(new FormData(imgUploadForm));
-      closeEdit();
+      window.backend.upload(new FormData(imgUploadForm), onSuccess);
+      successTemplate();
     }
   });
+
+  var onSuccess = function () {
+    closeEdit();
+
+    var fragment = document.createDocumentFragment(section);
+    var section = successTemplate.cloneNode(true);
+    var successButton = main.querySelector('.success__button');
+
+    fragment.appendChild(section);
+    main.appendChild(fragment);
+
+    successButton.addEventListener('click', cleanSuccess);
+    main.addEventListener('click', cleanSuccess);
+    document.addEventListener('keydown', window.util.onSuccessMessageEscPress);
+  };
 
   // попробовал сделать popup,но оно не отображается
   // var createSuccess = function () {
@@ -210,11 +226,12 @@
   //   var section = successTemplate.cloneNode(true);
   //   fragment.appendChild(section);
   //   main.appendChild(fragment);
-
-  var successButton = main.querySelector('.success__button');
-  successButton.addEventListener('click', cleanSuccess);
-  main.addEventListener('click', cleanSuccess);
-  document.addEventListener('keydown', window.util.onSuccessMessageEscPress);
+  //
+  //   var successButton = main.querySelector('.success__button');
+  //   successButton.addEventListener('click', cleanSuccess);
+  //   main.addEventListener('click', cleanSuccess);
+  //   document.addEventListener('keydown', window.util.onSuccessMessageEscPress);
+  // };
 
   var cleanSuccess = function () {
     var successMessagePopup = document.querySelector('.success');
