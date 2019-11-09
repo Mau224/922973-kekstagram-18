@@ -13,11 +13,11 @@
   var uploadButton = imgUploadForm.querySelector('#upload-file');
   var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
   var hashtagInput = imgUploadForm.querySelector('.text__hashtags');
-  var main = document.querySelector('.main');
+  var main = document.querySelector('main');
 
 
   var onEscButtonCloseEdit = function (evt) {
-    if (evt.keyCode === window.util.ESC_KEY && evt.target !== hashtagInput && !evt.target.classList.contains('.text__description')) {
+    if (evt.keyCode === window.ESC_KEY && evt.target !== hashtagInput && !evt.target.classList.contains('.text__description')) {
       closeEdit();
     }
   };
@@ -195,43 +195,6 @@
   var currentFilter = 'none';
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
-  // Создание кнопки отправки формы
-  imgUploadForm.addEventListener('submit', function (evt) {
-    if (imgUploadForm.checkValidity()) {
-      evt.preventDefault();
-      window.backend.upload(new FormData(imgUploadForm), onSuccess);
-      successTemplate();
-    }
-  });
-
-  var onSuccess = function () {
-    closeEdit();
-
-    var fragment = document.createDocumentFragment(section);
-    var section = successTemplate.cloneNode(true);
-    var successButton = main.querySelector('.success__button');
-
-    fragment.appendChild(section);
-    main.appendChild(fragment);
-
-    successButton.addEventListener('click', cleanSuccess);
-    main.addEventListener('click', cleanSuccess);
-    document.addEventListener('keydown', window.util.onSuccessMessageEscPress);
-  };
-
-  // попробовал сделать popup,но оно не отображается
-  // var createSuccess = function () {
-  //   var successTemplate = document.querySelector('#success').content.querySelector('.success');
-  //   var fragment = document.createDocumentFragment(section);
-  //   var section = successTemplate.cloneNode(true);
-  //   fragment.appendChild(section);
-  //   main.appendChild(fragment);
-  //
-  //   var successButton = main.querySelector('.success__button');
-  //   successButton.addEventListener('click', cleanSuccess);
-  //   main.addEventListener('click', cleanSuccess);
-  //   document.addEventListener('keydown', window.util.onSuccessMessageEscPress);
-  // };
 
   var cleanSuccess = function () {
     var successMessagePopup = document.querySelector('.success');
@@ -239,14 +202,65 @@
   };
 
 
-  var errorButton = main.querySelector('.error_close');
-  errorButton.addEventListener('click', cleanError);
-  main.addEventListener('click', cleanError);
-  document.addEventListener('keydown', window.util.errorMessageEscPress);
+  var onSuccess = function () {
+    closeEdit();
+
+    var fragment = document.createDocumentFragment(section);
+    var section = successTemplate.cloneNode(true);
+    var successButton = section.querySelector('.success__button');
+    // var successMain = document.querySelector('.success');
+
+    fragment.appendChild(section);
+    main.appendChild(fragment);
+
+    successButton.addEventListener('click', cleanSuccess);
+    main.addEventListener('click', cleanSuccess);
+    document.addEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  var onSuccessMessageEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC_KEY) {
+      document.removeEventListener('keydown', onSuccessMessageEscPress);
+      cleanSuccess();
+    }
+  };
+
 
   var cleanError = function () {
     var errorMessagePopup = document.querySelector('.error');
     main.removeChild(errorMessagePopup);
   };
+
+
+  var onError = function () {
+    closeEdit();
+
+    var fragment = document.createDocumentFragment(section);
+    var section = successTemplate.cloneNode(true);
+    var errorButton = main.querySelector('.error_close');
+
+    fragment.appendChild(section);
+    main.appendChild(fragment);
+
+    errorButton.addEventListener('click', cleanError);
+    main.addEventListener('click', cleanError);
+    document.addEventListener('keydown', errorMessageEscPress);
+  };
+
+
+  var errorMessageEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC_KEY) {
+      document.removeEventListener('keydown', errorMessageEscPress);
+      cleanError();
+    }
+  };
+
+  // Создание кнопки отправки формы
+  imgUploadForm.addEventListener('submit', function (evt) {
+    if (imgUploadForm.checkValidity()) {
+      evt.preventDefault();
+      window.backend.upload(new FormData(imgUploadForm), onSuccess, onError);
+    }
+  });
 
 })();

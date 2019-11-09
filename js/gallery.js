@@ -23,7 +23,7 @@
 
     // обработчик по enter
     photoElement.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ENTER_KEY) {
+      if (evt.keyCode === window.util.ENTER_KEY) {
         window.preview.show(photo);
       }
     });
@@ -43,7 +43,6 @@
   var onSuccess = function (imagesArray) {
     photos = imagesArray.slice(0, MAX_PHOTOS);
     renderPictures(photos);
-    window.createSuccess(photos);
   };
 
 

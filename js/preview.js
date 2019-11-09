@@ -14,7 +14,7 @@
 
     // обработчик по enter
     window.photoElement.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ENTER_KEY) {
+      if (evt.keyCode === window.util.ENTER_KEY) {
         createBigPicture(window.photo);
       }
     });
@@ -35,7 +35,7 @@
   };
 
   var onBigPictureEscPress = function (evt) {
-    if (evt.keyCode === window.ESC_KEY) {
+    if (evt.keyCode === window.util.ESC_KEY) {
       closeBigPicture();
     }
   };
