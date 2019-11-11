@@ -61,4 +61,7 @@
   };
 
   window.backend.load(onSuccess, onError);
+  window.gallery = {
+    renderPicture: renderPicture,
+  };
 })();
