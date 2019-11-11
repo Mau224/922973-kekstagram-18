@@ -13,6 +13,7 @@
   var uploadButton = imgUploadForm.querySelector('#upload-file');
   var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
   var hashtagInput = imgUploadForm.querySelector('.text__hashtags');
+  var main = document.querySelector('main');
 
 
   var onEscButtonCloseEdit = function (evt) {
@@ -192,5 +193,74 @@
 
   var picture = imageUploadPreview.querySelector('img'); // возвращает класс img
   var currentFilter = 'none';
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+
+
+  var cleanSuccess = function () {
+    var successMessagePopup = document.querySelector('.success');
+    main.removeChild(successMessagePopup);
+  };
+
+
+  var onSuccess = function () {
+    closeEdit();
+
+    var fragment = document.createDocumentFragment(section);
+    var section = successTemplate.cloneNode(true);
+    var successButton = section.querySelector('.success__button');
+    // var successMain = document.querySelector('.success');
+
+    fragment.appendChild(section);
+    main.appendChild(fragment);
+
+    successButton.addEventListener('click', cleanSuccess);
+    main.addEventListener('click', cleanSuccess);
+    document.addEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  var onSuccessMessageEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC_KEY) {
+      document.removeEventListener('keydown', onSuccessMessageEscPress);
+      cleanSuccess();
+    }
+  };
+
+
+  var cleanError = function () {
+    var errorMessagePopup = document.querySelector('.error');
+    main.removeChild(errorMessagePopup);
+  };
+
+
+  var onError = function () {
+    closeEdit();
+
+    var fragment = document.createDocumentFragment(section);
+    var section = successTemplate.cloneNode(true);
+    var errorButton = main.querySelector('.error_close');
+
+    fragment.appendChild(section);
+    main.appendChild(fragment);
+
+    errorButton.addEventListener('click', cleanError);
+    main.addEventListener('click', cleanError);
+    document.addEventListener('keydown', errorMessageEscPress);
+  };
+
+
+  var errorMessageEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC_KEY) {
+      document.removeEventListener('keydown', errorMessageEscPress);
+      cleanError();
+    }
+  };
+
+  // Создание кнопки отправки формы
+  imgUploadForm.addEventListener('submit', function (evt) {
+    if (imgUploadForm.checkValidity()) {
+      evt.preventDefault();
+      window.backend.upload(new FormData(imgUploadForm), onSuccess, onError);
+    }
+  });
 
 })();
