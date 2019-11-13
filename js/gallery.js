@@ -9,6 +9,7 @@
   var photoTemplate = document.querySelector('#picture')
     .content
     .querySelector('.picture');
+  var imgFilters = document.querySelector('.img-filters');
 
   var renderPicture = function (photo) {
     var photoElement = photoTemplate.cloneNode(true);
@@ -30,7 +31,16 @@
     return photoElement;
   };
 
+  var removePictures = function () {
+    var picturesCollection = pictures.querySelectorAll('.picture');
+    picturesCollection.forEach(function (picture) {
+      picture.remove();
+    });
+  };
+
   var renderPictures = function (items) {
+    removePictures();
+
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < items.length; i++) {
@@ -43,6 +53,7 @@
   var onSuccess = function (imagesArray) {
     photos = imagesArray.slice(0, MAX_PHOTOS);
     renderPictures(photos);
+    imgFilters.classList.remove('img-filters--inactive');
   };
 
 
@@ -62,6 +73,9 @@
 
   window.backend.load(onSuccess, onError);
   window.gallery = {
-    renderPicture: renderPicture,
+    photos: function () {
+      return photos;
+    },
+    renderPictures: renderPictures
   };
 })();
