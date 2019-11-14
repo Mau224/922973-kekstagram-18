@@ -5,6 +5,9 @@
   var COMMENTS_MAX = 5;
   var bigPicture = document.querySelector('.big-picture');
   var socialComments = bigPicture.querySelector('.social__comments');
+  var renderCommentCout = document.querySelector('.social__comment-count');
+
+  var comments = [];
 
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
   var commentLoad = bigPicture.querySelector('.comments-loader');
@@ -43,6 +46,7 @@
     }
   };
 
+
   var renderComments = function (data) {
 
     var callTemplate = socialComments.querySelector('.social__comment');
@@ -79,22 +83,19 @@
     var socialText = bigPicture.querySelector('.social__text');
     socialText.textContent = photoInfo.comments[0].message;
 
-    var renderCommentCout = document.querySelector('.social__comment-count');
+    var onCommentsLoaderClick = function () {
+      var nextComment = comments.slice(socialComments, socialComments + COMMENTS_MAX);
+      renderComments(nextComment);
+      socialComments += COMMENTS_MAX;
+      if (socialComments >= comments.length || comments.length < COMMENTS_MAX) {
+        commentLoad.classList.add('.vissualy-hidden');
+      }
+    };
+
     renderCommentCout.innerHTML = '';
     renderCommentCout.textContent = photoInfo.comments.length + ' ' + 'из' + ' ' + photoInfo.comments.length + ' ' + 'коментариев';
 
     renderComments(photoInfo.comments);
-
-    var onCommentsLoaderClick = function () {
-
-      var copiedComments = window.renderPicture.slice();
-      copiedComments.slice(socialComments.length + COMMENTS_MAX).forEach(renderComments);
-
-      if (socialComments.length === copiedComments.length) {
-        commentLoad.classList.add('visually-hidden');
-        commentLoad.removeEventListener('click', onCommentsLoaderClick);
-      }
-    };
 
     commentLoad.addEventListener('click', onCommentsLoaderClick);
 
