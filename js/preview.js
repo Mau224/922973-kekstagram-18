@@ -11,20 +11,13 @@
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
   var commentLoad = bigPicture.querySelector('.comments-loader');
 
-  window.photoElement.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.util.ENTER_KEY) {
-      createBigPicture(window.photo);
-    }
-  });
-
-
   var renderComment = function (template, comment) {
-    var element = template.cloneNode(true); // клонирование тег li и дети
+    var element = template.cloneNode(true);
     var commentImg = element.querySelector('img');
     commentImg.src = comment.avatar;
     commentImg.alt = comment.names;
     var socialText = element.querySelector('.social__text');
-    socialText.textContent = comment.message;// длина массива
+    socialText.textContent = comment.message;
     return element;
   };
 
@@ -36,11 +29,10 @@
     var commentList = document.createDocumentFragment();
 
     for (var i = 0; i < data.length; i++) {
-      commentList.appendChild(renderComment(template, data[i]));// добавляет клонированый li
+      commentList.appendChild(renderComment(template, data[i]));
     }
 
-    socialComments.appendChild(commentList);// должен вставить в ul
-
+    socialComments.appendChild(commentList);
     return data.length;
   };
 
@@ -73,7 +65,7 @@
 
     printCommentCount(renderCommentCout, indexComment, photoInfo.comments.length);
 
-    // Закрывает пользовательский пост
+
     var closeBigPicture = function () {
       bigPicture.classList.add('hidden');
 

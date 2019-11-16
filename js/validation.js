@@ -2,10 +2,7 @@
 
 (function () {
 
-  // Добавление хэш-тегов и валидация
-
-  var inputHashtags = document.querySelector('.text__hashtags');// Поик по документу
-
+  var inputHashtags = document.querySelector('.text__hashtags');
   var checkHashTags = function () {
     var MAX_SYMVOLS = 20;
     var MAX_HASHTAG = 5;

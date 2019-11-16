@@ -22,7 +22,6 @@
       window.preview.show(photo);
     });
 
-    // обработчик по enter
     photoElement.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.util.ENTER_KEY) {
         window.preview.show(photo);
@@ -68,7 +67,6 @@
     errorButton.addEventListener('click', function () {
       mainSection.removeChild(errorTemplateBlock);
     });
-
   };
 
   window.backend.load(onSuccess, onError);
