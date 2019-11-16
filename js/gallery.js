@@ -76,6 +76,7 @@
     photos: function () {
       return photos;
     },
-    renderPictures: renderPictures
+    renderPictures: renderPictures,
+    renderPicture: renderPicture
   };
 })();
