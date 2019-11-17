@@ -4,7 +4,7 @@
 
   var BTN_CLASS = 'img-filters__button';
   var MAX_RANDOM = 10;
-  // фильтр фото
+
   var filterForm = document.querySelector('.img-filters__form');
 
   var debouncedFilter = function (id) {

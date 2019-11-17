@@ -7,13 +7,12 @@
     MAX: 100
   };
 
-
-  var imgUploadForm = document.querySelector('.img-upload__form');
+  var main = document.querySelector('main');
+  var imgUploadForm = main.querySelector('.img-upload__form');
   var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
   var uploadButton = imgUploadForm.querySelector('#upload-file');
   var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
   var hashtagInput = imgUploadForm.querySelector('.text__hashtags');
-  var main = document.querySelector('main');
 
 
   var onEscButtonCloseEdit = function (evt) {
@@ -38,7 +37,7 @@
   uploadButton.addEventListener('change', openEdit);
 
   var resizeImage = function (value) {
-    imageUploadPreview.style.transform = 'scale(' + value / 100 + ')'; // измненяет размер исходя из значения в value через метод transform
+    imageUploadPreview.style.transform = 'scale(' + value / 100 + ')';
   };
 
   var changeValue = function (isGrow) {
@@ -46,36 +45,34 @@
     if (!isGrow && currentValue > Resize.MIN) {
       currentValue -= Resize.MIN;
     } else if (isGrow && currentValue < Resize.MAX) {
-      currentValue += Resize.MIN; // если isGrow не ровно или value больше шагов ,то отнять шаг от value ,если isGrow или value меньше 100 то прибавить шаг к value
+      currentValue += Resize.MIN;
     }
-    resizeImage(currentValue); // изменить размер в соотвествии с value
-    currentValue = currentValue; // прировнять значения
-    scaleControlValue.value = currentValue + '%'; // изменяет значение атрибута у пременной указанного в value
+    resizeImage(currentValue);
+    currentValue = currentValue;
+    scaleControlValue.value = currentValue + '%';
   };
 
-  // Увеличение масштаба изображения
   var imageForm = document.querySelector('#upload-select-image');
-  var imageUploadScale = imageForm.querySelector('.img-upload__scale');// ищет по документу
-  var scaleControlValue = imageUploadScale.querySelector('.scale__control--value');// ищет по переменной
+  var imageUploadScale = imageForm.querySelector('.img-upload__scale');
+  var scaleControlValue = imageUploadScale.querySelector('.scale__control--value');
   var buttonSmall = imageUploadScale.querySelector('.scale__control--smaller');
   var buttonlBig = imageUploadScale.querySelector('.scale__control--bigger');
   var imageUploadPreview = imageForm.querySelector('.img-upload__preview');
 
 
-  buttonSmall.addEventListener('click', function () { // отменяет событие и присваивает ему false
+  buttonSmall.addEventListener('click', function () {
     changeValue(false);
   });
 
-  buttonlBig.addEventListener('click', function () { // отменяет событие и присваивает ему true
+  buttonlBig.addEventListener('click', function () {
     changeValue(true);
   });
 
 
-  // Наложение эффекта на изображение
-  var FILTERS = {
+  var filters = {
     'chrome': function (value) {
       return 'grayscale(' + (value / 100) + ')';
-    }, // Присваение классу эффекта с модификатором
+    },
     'sepia': function (value) {
       return 'sepia(' + (value / 100) + ')';
     },
@@ -94,7 +91,7 @@
   };
 
   var imageUploadEffects = imageForm.querySelector('.img-upload__effects');
-  var effectsItems = imageUploadEffects.querySelectorAll('.effects__radio');// Ищет список всех указанных селекторов
+  var effectsItems = imageUploadEffects.querySelectorAll('.effects__radio');
 
   var changePinPosition = function (pinPosition) {
 
@@ -135,7 +132,7 @@
       upEvt.preventDefault();
 
 
-      FILTERS[currentFilter]();
+      filters[currentFilter]();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -155,7 +152,7 @@
 
 
   var addThumbnailClickHandler = function (thumbnail) {
-    thumbnail.addEventListener('change', function (evt) { // вешаем обработчик события на thumbnail
+    thumbnail.addEventListener('change', function (evt) {
       var filterName = evt.target.value;
 
       picture.classList.remove('effects__preview--' + currentFilter);
@@ -173,11 +170,11 @@
 
       picture.classList.add('effects__preview--' + currentFilter);
       var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
-      picture.style.filter = FILTERS[currentFilter](effectValue);
+      picture.style.filter = filters[currentFilter](effectValue);
     });
   };
 
-  for (var i = 0; i < effectsItems.length; i++) { // Обработчик кликов добавляет срабатывание кликов по длине effectsItems
+  for (var i = 0; i < effectsItems.length; i++) {
     addThumbnailClickHandler(effectsItems[i]);
   }
 
@@ -185,13 +182,13 @@
     var errorCode = window.validation.check();
 
     if (errorCode !== '') {
-      window.validation.element.setCustomValidity(errorCode);// устанавливает специальное значение из переменной HASHTAG_ERRORS
+      window.validation.element.setCustomValidity(errorCode);
     } else {
       window.validation.element.setCustomValidity('');
     }
   });
 
-  var picture = imageUploadPreview.querySelector('img'); // возвращает класс img
+  var picture = imageUploadPreview.querySelector('img');
   var currentFilter = 'none';
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
@@ -208,7 +205,6 @@
     var fragment = document.createDocumentFragment(section);
     var section = successTemplate.cloneNode(true);
     var successButton = section.querySelector('.success__button');
-    // var successMain = document.querySelector('.success');
 
     fragment.appendChild(section);
     main.appendChild(fragment);
@@ -255,7 +251,6 @@
     }
   };
 
-  // Создание кнопки отправки формы
   imgUploadForm.addEventListener('submit', function (evt) {
     if (imgUploadForm.checkValidity()) {
       evt.preventDefault();
