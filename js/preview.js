@@ -15,7 +15,7 @@
     var element = template.cloneNode(true);
     var commentImg = element.querySelector('img');
     commentImg.src = comment.avatar;
-    commentImg.alt = comment.names;
+    commentImg.alt = comment.name;
     var socialText = element.querySelector('.social__text');
     socialText.textContent = comment.message;
     return element;
