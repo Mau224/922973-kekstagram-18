@@ -234,7 +234,6 @@
     closeEdit();
     commentBase();
 
-
     var fragment = document.createDocumentFragment(section);
     var section = successTemplate.cloneNode(true);
     var successButton = section.querySelector('.success__button');
