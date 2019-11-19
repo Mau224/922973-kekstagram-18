@@ -24,14 +24,13 @@
     }
   };
 
-
   var closeEdit = function () {
-    imgUploadForm.reset();
     removeFilter();
     setOriginFilter();
     imgEditOverlay.classList.add('hidden');
     closeEditButton.removeEventListener('click', closeEdit);
     document.removeEventListener('keydown', onEscButtonCloseEdit);
+    imgUploadForm.reset();
   };
 
 
@@ -234,7 +233,6 @@
   var onSuccess = function () {
     closeEdit();
     commentBase();
-
 
     var fragment = document.createDocumentFragment(section);
     var section = successTemplate.cloneNode(true);
