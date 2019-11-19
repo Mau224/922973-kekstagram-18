@@ -2,6 +2,8 @@
 
 (function () {
 
+  var MAX_WIDTH = 455;
+
   var Resize = {
     MIN: 25,
     MAX: 100
@@ -9,7 +11,7 @@
 
 
   var main = document.querySelector('main');
-  var imgUploadForm = document.querySelector('.img-upload__form');
+  var imgUploadForm = main.querySelector('.img-upload__form');
   var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
   var uploadButton = imgUploadForm.querySelector('#upload-file');
   var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
@@ -26,7 +28,6 @@
   var closeEdit = function () {
     imgUploadForm.reset();
     removeFilter();
-    resetScale();
     setOriginFilter();
     imgEditOverlay.classList.add('hidden');
     closeEditButton.removeEventListener('click', closeEdit);
@@ -120,6 +121,7 @@
     document.querySelector('.effect-level__depth').style.width = effectLevel + '%';
   };
 
+  var pinPosition = null;
   var pin = document.querySelector('.effect-level__pin');
   pin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -132,7 +134,7 @@
       moveEvt.preventDefault();
 
       var shiftX = startX - moveEvt.clientX;
-      var pinPosition = (pin.offsetLeft - shiftX);
+      pinPosition = (pin.offsetLeft - shiftX);
 
       changePinPosition(pinPosition);
 
@@ -142,8 +144,7 @@
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-
-      filters[currentFilter]();
+      picture.style.filter = filters[currentFilter](pinPosition * 100 / MAX_WIDTH);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -179,6 +180,7 @@
       checkEffectsScroll();
 
       picture.classList.add('effects__preview--' + currentFilter);
+      setOriginFilter();
       var effectValue = parseInt(imageForm.querySelector('.effect-level__value').value, 10);
       picture.style.filter = filters[currentFilter](effectValue);
     });
@@ -205,14 +207,11 @@
   function removeFilter() {
     picture.classList = '';
     picture.style = '';
+    changeValue(100);
+    checkEffectsNone.classList.add('hidden');
   }
 
-  var resetScale = function () {
-    changeValue(100);
-  };
-
   var setOriginFilter = function () {
-    checkEffectsNone.classList.add('hidden');
     effectLevelDepth.style.width = '100%';
     effectLevelPin.style.left = '100%';
   };
@@ -295,5 +294,6 @@
       window.backend.upload(new FormData(imgUploadForm), onSuccess, onError);
     }
   });
+
 
 })();
