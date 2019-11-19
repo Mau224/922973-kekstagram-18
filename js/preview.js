@@ -4,18 +4,18 @@
 
   var COMMENTS_MAX = 5;
   var bigPicture = document.querySelector('.big-picture');
-  var socialComments = bigPicture.querySelector('.social__comments');
   var renderCommentCout = document.querySelector('.social__comment-count');
-  var indexComment = null;
-
+  var socialComments = bigPicture.querySelector('.social__comments');
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
   var commentLoad = bigPicture.querySelector('.comments-loader');
+  var indexComment = null;
+
 
   var renderComment = function (template, comment) {
     var element = template.cloneNode(true);
     var commentImg = element.querySelector('img');
     commentImg.src = comment.avatar;
-    commentImg.alt = comment.names;
+    commentImg.alt = comment.name;
     var socialText = element.querySelector('.social__text');
     socialText.textContent = comment.message;
     return element;
