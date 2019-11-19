@@ -26,12 +26,12 @@
 
 
   var closeEdit = function () {
-    imgUploadForm.reset();
     removeFilter();
     setOriginFilter();
     imgEditOverlay.classList.add('hidden');
     closeEditButton.removeEventListener('click', closeEdit);
     document.removeEventListener('keydown', onEscButtonCloseEdit);
+    imgUploadForm.reset();
   };
 
 
