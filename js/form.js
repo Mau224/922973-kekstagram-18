@@ -14,6 +14,7 @@
   var uploadButton = imgUploadForm.querySelector('#upload-file');
   var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
   var hashtagInput = imgUploadForm.querySelector('.text__hashtags');
+  var commentField = imgUploadForm.querySelector('.text__description');
 
 
   var onEscButtonCloseEdit = function (evt) {
@@ -27,7 +28,7 @@
     removeFilter();
     resetScale();
     setOriginFilter();
-    imgEditOverlay.classList.add('hidden');
+    commentBase();
     closeEditButton.removeEventListener('click', closeEdit);
     document.removeEventListener('keydown', onEscButtonCloseEdit);
   };
@@ -58,12 +59,12 @@
   };
 
   var imageForm = document.querySelector('#upload-select-image');
+  var checkEffectsNone = document.querySelector('.effect-level');
   var imageUploadScale = imageForm.querySelector('.img-upload__scale');
+  var imageUploadPreview = imageForm.querySelector('.img-upload__preview');
   var scaleControlValue = imageUploadScale.querySelector('.scale__control--value');
   var buttonSmall = imageUploadScale.querySelector('.scale__control--smaller');
   var buttonlBig = imageUploadScale.querySelector('.scale__control--bigger');
-  var imageUploadPreview = imageForm.querySelector('.img-upload__preview');
-  var checkEffectsNone = document.querySelector('.effect-level');
   var effectLevelPin = checkEffectsNone.querySelector('.effect-level__pin');
   var effectLevelDepth = checkEffectsNone.querySelector('.effect-level__depth');
 
@@ -210,9 +211,17 @@
   };
 
   var setOriginFilter = function () {
+    checkEffectsNone.classList.add('hidden');
     effectLevelDepth.style.width = '100%';
     effectLevelPin.style.left = '100%';
+  };
 
+  var commentBase = function () {
+    hashtagInput.setCustomValidity('');
+    hashtagInput.value = '';
+    commentField.setCustomValidity('');
+    imgEditOverlay.classList.add('hidden');
+    commentField.style = '';
   };
 
   var cleanSuccess = function () {
@@ -281,6 +290,7 @@
   imgUploadForm.addEventListener('submit', function (evt) {
     if (imgUploadForm.checkValidity()) {
       evt.preventDefault();
+      hashtagInput.value = '';
       window.backend.upload(new FormData(imgUploadForm), onSuccess, onError);
     }
   });

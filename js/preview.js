@@ -4,12 +4,12 @@
 
   var COMMENTS_MAX = 5;
   var bigPicture = document.querySelector('.big-picture');
-  var socialComments = bigPicture.querySelector('.social__comments');
   var renderCommentCout = document.querySelector('.social__comment-count');
-  var indexComment = null;
-
+  var socialComments = bigPicture.querySelector('.social__comments');
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
   var commentLoad = bigPicture.querySelector('.comments-loader');
+  var indexComment = null;
+
 
   var renderComment = function (template, comment) {
     var element = template.cloneNode(true);
