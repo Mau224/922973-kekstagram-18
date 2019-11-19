@@ -9,29 +9,30 @@
 
 
   var main = document.querySelector('main');
-  var imgUploadForm = main.querySelector('.img-upload__form');
+  var imgUploadForm = document.querySelector('.img-upload__form');
   var imgEditOverlay = imgUploadForm.querySelector('.img-upload__overlay');
   var uploadButton = imgUploadForm.querySelector('#upload-file');
   var closeEditButton = imgUploadForm.querySelector('#upload-cancel');
   var hashtagInput = imgUploadForm.querySelector('.text__hashtags');
   var commentField = imgUploadForm.querySelector('.text__description');
 
-
   var onEscButtonCloseEdit = function (evt) {
-    if (evt.keyCode === window.util.ESC_KEY && evt.target !== hashtagInput && !evt.target.classList.contains('.text__description')) {
+    if (evt.keyCode === window.util.ESC_KEY && evt.target !== hashtagInput && evt.target !== commentField) {
       closeEdit();
     }
   };
+
 
   var closeEdit = function () {
     imgUploadForm.reset();
     removeFilter();
     resetScale();
     setOriginFilter();
-    commentBase();
+    imgEditOverlay.classList.add('hidden');
     closeEditButton.removeEventListener('click', closeEdit);
     document.removeEventListener('keydown', onEscButtonCloseEdit);
   };
+
 
   var openEdit = function () {
     imgEditOverlay.classList.remove('hidden');
@@ -220,7 +221,6 @@
     hashtagInput.setCustomValidity('');
     hashtagInput.value = '';
     commentField.setCustomValidity('');
-    imgEditOverlay.classList.add('hidden');
     commentField.style = '';
   };
 
@@ -234,6 +234,7 @@
 
   var onSuccess = function () {
     closeEdit();
+    commentBase();
 
 
     var fragment = document.createDocumentFragment(section);
@@ -265,7 +266,7 @@
 
   var onError = function () {
     closeEdit();
-
+    commentBase();
 
     var fragment = document.createDocumentFragment(section);
     var section = successTemplate.cloneNode(true);
